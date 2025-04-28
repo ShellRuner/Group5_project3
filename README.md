@@ -1,21 +1,26 @@
 ##Project 3: Event RSVP System
  *Project Overview:
 	Create an event platform backend where users can create events and RSVP to them.
-NB : For more details about the project3 look at the google doc
+**NB** : For more details about the project3 look at the google doc
 
 ##Contribution rules
 -First clone the repo
 
-	repo link:
-	https://github.com/ShellRuner/Group5_project3.git
+	**Repo link**:
+	[https://github.com/ShellRuner/Group5_project3.git]
 
 -Create a branche and work on your code
+```bash
   command to creat a branch
-  ```bash
+
      git branch <branch_name>
+
   to position on your branch
+
      git checkout <branch_name>
+
   commit your work do on the branch, you must still be on the branch to execute the commands
+
      git add .
 	 git commit -m "ALT_School_ID ...others messages"
 	 git push origin <branch_name>
