@@ -11,6 +11,7 @@ NB : For more details about the project3 look at the google doc
 
 -Create a branche and work on your code
   command to creat a branch
+  ```bash
      git branch <branch_name>
   to position on your branch
      git checkout <branch_name>
@@ -20,14 +21,16 @@ NB : For more details about the project3 look at the google doc
 	 git push origin <branch_name>
 
 -After send you branch work on the repo , ask for a pull request(PR)
-  *before merging a work evry collaborators should ask for a review of his code by a pull request(even the repo maintainer)
-  *so at least two collaborators should give a comment on the code and their approval before merging the code
-  *the code should not be merge by the code owner himself but by one of the reviewers
+  .Before merging a work evry collaborators should ask for a review of his code by a pull request(even the repo maintainer)
+  .So at least two collaborators should give a comment on the code and their approval before merging the code
+  .The code should not be merge by the code owner himself but by one of the reviewers
 
-NB(!!!!!): Don't forget to include your ALT_School_ID first on each commits messages.
+NB(Important!): Don't forget to include your ALT_School_ID first on each commits messages.
 
 ###Another important thing 
-  Use <git pull origin main> to bring localy on your machine all the motifications made on the project
+  Use the following command to bring localy on your machine all the motifications made on the project:
+
+	git pull origin main
 
 Thanks.
 
