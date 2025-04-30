@@ -23,22 +23,8 @@ class Response(BaseModel):
     error_message: Optional[str] = None
     data: Optional[Event] = None
 
-
 events: dict[str, Event] = {}
 
-
-
-@app.get("/")
-def home():
-    return {"message": "Welcome to the Event Creation API"}
-
-@app.get("/events")
-def get_events():
-    return list(events.values())
-
-@app.get("/events/{id}")
-def get_event_by_id(id: str):
-    events = events.get(id)
 
 @app.post("/create_event")
 async def create_event(
