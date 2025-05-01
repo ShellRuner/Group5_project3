@@ -14,7 +14,7 @@ class Event(BaseModel):
 
 # Event Database
 events_db = [
-    Event(id=1, title="Bridal Shower", description="Obong's bridal shower", date="2025-05-01", location="Lagos"),
+    Event(id=1, title="Open day", description="School", date="2025-05-01", location="Lagos"),
     Event(id=2, title="Birthday Party", description="A birthday party", date="2025-05-03", location="Abuja"),
     Event(id=3, title="Tech Party", description="All-night coding", date="2025-05-01", location="Port Harcourt"),
 ]
