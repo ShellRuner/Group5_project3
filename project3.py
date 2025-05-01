@@ -1,44 +1,53 @@
 from fastapi import FastAPI, File, UploadFile, Form
-from typing import Annotated
+
 from pydantic import BaseModel
-from typing import Optional
+
+from typing import Annotated, Optional
+
+
 
 app = FastAPI()
 
-#pydantic schema
-# class Event(BaseModel):
-#     id: int
-#     title: str
-#     description: str
-#     date: str
-#     location: str
-#     flyer_filename: Optional[str] = None
-#     rsvps: list[str] = []
-    
-# class RSVP(BaseModel):
-#     name: str
-#     email: str
+class Event(BaseModel):
+    title: str
+    description: str
+    date: Optional[str] = None
+    location: str
+    flyer: Optional[str] = None
 
-#In-memeory events database
-events = {}
-#Event creation and file handling
-#Endpoint to the event creation form
-@app.post("/events/")
-async def events(
+    
+
+class Response(BaseModel):
+    message: Optional[str] = None
+    has_error: bool = False
+    error_message: Optional[str] = None
+    data: Optional[Event] = None
+
+events: dict[str, Event] = {}
+
+
+@app.post("/create_event")
+async def create_event(
     title: Annotated[str, Form()],
     description: Annotated[str, Form()],
     date: Annotated[str, Form()],
     location: Annotated[str, Form()],
-    flyer: Optional[UploadFile] = None
+    flyer: Annotated[Optional[UploadFile], File()] = None
 ):
+    if title in events:
+        return Response(
+            has_error=True,
+            error_message="Event with this title already exists."
+        )
     
-    async def creat_flyer(file: UploadFile):
-        save_file_to_disk(file)
-    def save_file_to_disk(uploaded_file: UploadFile):
-        with open(uploaded_file.filename, "wb+") as file_object:
-            file_object.write(uploaded_file.file.read())
-            
-            
-    return {"message" : "Event successfully created"}
-
-
+    flyer_filename = flyer.filename if flyer else None
+    
+    event = Event(
+        title=title,
+        description=description,
+        date=date,
+        location=location,
+        flyer=flyer_filename
+    )
+    events[title] = event
+    return Response(message="Event created successfully", data=event)
