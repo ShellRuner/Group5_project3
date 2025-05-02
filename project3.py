@@ -1,12 +1,12 @@
-from typing import List, Optional, Annotated
+from typing import List, Optional, Annotated, Dict
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Query, status
-from fastapi.responses import JSONResponse
+
+# from fastapi.responses import JSONResponse
+
 
 app = FastAPI()
-
-
 #Data Models
 #Event schema
 class Event(BaseModel):
@@ -26,7 +26,7 @@ class Response(BaseModel):
     error_message: Optional[str] = None
     data: Optional[Event] = None
 
-
+#RSVP handling data model
 class GuestBase(BaseModel):
     name: str
     email: EmailStr
@@ -54,7 +54,8 @@ class RSVPResponse(BaseModel):
 
 
 # In-memory Data Storage
-events: dict[str, Event] = {}
+events: Dict[str, Event] = {}
+
 guests: List[GuestRead] = []
 
 
@@ -111,29 +112,29 @@ def get_guests_by_event(event_id: int):
     return [guest for guest in guests if guest.event_id == event_id]
 
 
-# Endpont to create events
+#home
 @app.get("/")
 def home():
     return "WELCOME TO RSVP SYSTEM ASSIGNMENT"
 
-
-@app.post("/events")
+# Endpont to create events
+@app.post("/events", response_model=Response)
 async def create_event(
     title: Annotated[str, Form()],
     description: Annotated[str, Form()],
     date: Annotated[str, Form()],
     location: Annotated[str, Form()],
     flyer: Optional[UploadFile] = None,
-) -> Response:
-    if title in events:
-        return Response(
-            has_error=True,
-            error_message="Event with this title already exists.",
-        )
-    flyer_filename = None
+):
+    for event in events.values():
+        if event.title.lower() == title.lower():
+            return Response(has_error=True, error_message="Event with this title already exists.",)
+        
     if flyer:
         flyer_filename = flyer.filename
         await save_file_to_disk(flyer)
+    else:
+        flyer_filename = None
 
     event = Event(
         id=len(events) + 1,
@@ -144,7 +145,7 @@ async def create_event(
         flyer_filename=flyer_filename,
         rsvps=[],
     )
-    events[title] = event
+    events[event.id] = event
     return Response(message="Event created successfully", data=event)
 
 
@@ -153,15 +154,22 @@ async def save_file_to_disk(uploaded_file: UploadFile):
         file_content = await uploaded_file.read()
         file_object.write(file_content)
 
+#events listing
 
+@app.get("/events")
+def list_events():
+    return events
+
+
+#RSVP processing and listing
 @app.post("/guests/", response_model=GuestRead, status_code=status.HTTP_201_CREATED)
-async def create_guest_endpoint(guest: GuestCreate) -> GuestRead:
+def create_guest_endpoint(guest: GuestCreate) -> GuestRead:
     db_guest = create_guest(guest=guest)
     return db_guest
 
 
-@app.post("/guests/{guest_id}/rsvp", response_model=RSVPResponse)
-async def rsvp_status_endpoint(
+@app.post("/guests/{guest_id}/rsvp",response_model=RSVPResponse) 
+def rsvp_status_endpoint(
     guest_id: int,
     rsvp_status: Annotated[str, Query(..., enum=["attending", "not_attending"])]
 ) -> RSVPResponse:
@@ -184,6 +192,7 @@ async def rsvp_status_endpoint(
 
 
 @app.get("/events/{event_id}/guests", response_model=List[GuestRead])
-async def read_guests_by_event_endpoint(event_id: int) -> List[GuestRead]:
+def read_guests_by_event_endpoint(event_id: int) -> List[GuestRead]:
     event_guests = get_guests_by_event(event_id=event_id)
     return event_guests
+
