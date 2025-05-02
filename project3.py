@@ -8,6 +8,7 @@ from typing import Annotated, Optional
 
 app = FastAPI()
 
+
 #Data Models
 #Event schema
 class Event(BaseModel):

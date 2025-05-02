@@ -2,6 +2,8 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from typing import List, Optional
 
+
+
 # Event model
 class Event(BaseModel):
     id: int
