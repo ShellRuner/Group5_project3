@@ -11,7 +11,7 @@
 
 -Create a branche and work on your code
 ```bash
-  command to creat a branch
+  command to create a branch
 
      git branch <branch_name>
 
@@ -26,7 +26,7 @@
 	 git push origin <branch_name>
 
 -After send you branch work on the repo , ask for a pull request(PR)
-  .Before merging a work evry collaborators should ask for a review of his code by a pull request(even the repo maintainer)
+  .Before merging a work every collaborator should ask for a review of his code by a pull request(even the repo maintainer)
   .So at least two collaborators should give a comment on the code and their approval before merging the code
   .The code should not be merge by the code owner himself but by one of the reviewers
 
